@@ -14,7 +14,7 @@ let signup=async (req, res) => {
       confirmPassword,
     });
     if (!newUser) {
-      res.status(400).json({ message: "Truoble creating User" });
+      res.status(400).json({ message: "Trouble creating User" });
       return;
     }
     res.status(200).json(newUser);
@@ -26,7 +26,7 @@ let signup=async (req, res) => {
   }
 }
 
-let singin=async (req, res) => {
+let signin=async (req, res) => {
   let { username, password } = req.body;
   try {
     let existingUser = await User.findOne({ username });
@@ -34,7 +34,9 @@ let singin=async (req, res) => {
       res.status(400).json({ message: "Username doesn't exist.Please Signup!" });
       return;
     }
-    if (password !== existingUser.password) {
+    //methods can be used on instance of Model
+    let isMatch=await existingUser.comparePassword(password,existingUser.password)
+    if (!isMatch) {
       res.status(400).json({ message: "Password doesn't match" });
       return;
     }
@@ -49,5 +51,5 @@ let singin=async (req, res) => {
 
 export {
     signup,
-    singin
+    signin
 }
