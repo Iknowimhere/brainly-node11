@@ -36,7 +36,7 @@ let signup = async (req, res) => {
 };
 
 let signin = async (req, res) => {
-  let { username, password } = req.body;
+  let { username, password,confirmPassword } = req.body;
   try {
     let existingUser = await User.findOne({ username });
     if (!existingUser) {
