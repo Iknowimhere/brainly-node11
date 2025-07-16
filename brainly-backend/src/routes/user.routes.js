@@ -3,6 +3,7 @@ import { signin, signup } from '../controllers/user.controllers.js';
 let router=express.Router()
 
 //singup
+// /api/v1/users/singup
 router.post("/signup",signup );
 
 //singin

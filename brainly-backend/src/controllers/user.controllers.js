@@ -1,35 +1,32 @@
 import User from "../models/user.model.js";
-import z from "zod";
+import jwt from 'jsonwebtoken'
 
-let singupSchema = z.object({
-  username: z.string().min(4),
-  password: z.string(),
-  confirmPassword: z.string(),
-});
+let createToken=(id)=>{
+  return jwt.sign({id},"topSecret",{
+    expiresIn:'1d'
+  })
+}
 
 let signup = async (req, res) => {
-  let {success,data,error} = singupSchema.safeParse(req.body);
-
+  let {username,password,confirmPassword}=req.body;
   try {
-    let existingUser = await User.findOne({ username: data.username });
+    let existingUser = await User.findOne({ username });
     if (existingUser) {
       res.status(400).json({ message: "User already exists.Please Login!" });
       return;
     }
-    let newUser;
-    if (success) {
-      newUser = await User.create({
-        username: data.username,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
+    let newUser= await User.create({
+        username,
+        password:password,
+        confirmPassword:confirmPassword,
       });
-    }
 
     if (!newUser) {
       res.status(400).json({ message: "Trouble creating User" });
       return;
     }
-    res.status(200).json(newUser);
+    let token=createToken(newUser._id)
+    res.status(200).json({newUser,token});
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -57,7 +54,8 @@ let signin = async (req, res) => {
       res.status(400).json({ message: "Password doesn't match" });
       return;
     }
-    res.status(200).json(existingUser);
+    let token=createToken(existingUser._id)
+    res.status(200).json({existingUser,token});
   } catch (error) {
     console.log(error);
     res.status(500).json({
