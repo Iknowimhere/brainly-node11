@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "../axios";
 import { enqueueSnackbar } from "notistack";
-
+import useAuth from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 const Singup = () => {
+  let {setUser,setToken}=useAuth()
   const [form, setForm] = useState({
     username: "",
     password: "",
     confirmPassword: "",
   });
+  let navigate=useNavigate()
   const [error, setError] = useState("");
   const [loading,setLoading]=useState(false)
 
@@ -45,15 +48,23 @@ const Singup = () => {
     // TODO: Add your signup logic here (API call etc.)
     // Example: console.log(form);
 
+   try {
     let res=await axios.post("/users/signup",form)
     setLoading(false)
-    enqueueSnackbar("Signup Successfull!!",{variant:"success"})
+    enqueueSnackbar("Signup Successfull!!",{variant:"success",preventDuplicate:true,autoHideDuration:3000})
     console.log(res);
+    setUser(res.data.newUser)
+    setToken(res.data.token)
     setForm({
     username: "",
     password: "",
     confirmPassword: "",
-  })    
+  }) 
+  navigate("/dashboard")  
+   } catch (error) {
+    console.log(error.response.data.message);
+    setError(error.response.data.message)
+   }
   };
 
   return (
@@ -63,9 +74,6 @@ const Singup = () => {
         className="w-full max-w-sm bg-white p-8 rounded-lg shadow-md space-y-6"
       >
         <h2 className="text-2xl font-semibold text-gray-800 text-center">Sign Up</h2>
-         {error && (
-          <div className="text-red-500 text-sm text-center">{error}</div>
-        )}
         <div>
           <label className="block text-gray-600 mb-1" htmlFor="username">
             Username

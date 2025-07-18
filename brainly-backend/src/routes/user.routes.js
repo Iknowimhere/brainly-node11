@@ -5,7 +5,7 @@ import singupSchema from '../schemas/user.schema.js';
 let router=express.Router()
 
 //singup
-// /api/v1/users/singup
+// /api/v1/users/signup
 router.post("/signup",validate(singupSchema),signup );
 
 //singin

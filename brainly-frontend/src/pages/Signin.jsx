@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "../axios";
 import { enqueueSnackbar } from "notistack";
+import useAuth from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 const Signin = () => {
+    let {setUser,setToken}=useAuth()
   const [form, setForm] = useState({ username: "", password: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  let navigate=useNavigate()
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     setError("");
@@ -29,14 +33,22 @@ const Signin = () => {
       return;
     }
 
-    let res = await axios.post("/users/signin", form);
+    try {
+      let res = await axios.post("/users/signin", form);
     setLoading(false);
     enqueueSnackbar("Signin Successfull!!", { variant: "success" });
     console.log(res);
+    setUser(res.data.existingUser)
+    setToken(res.data.token)
     setForm({
       username: "",
       password: "",
     });
+      navigate("/dashboard") 
+    } catch (error) {
+      console.log(error.response.data.message);
+      setError(error.response.data.message)
+    }
   };
 
   return (
@@ -48,9 +60,6 @@ const Signin = () => {
         <h2 className="text-2xl font-semibold text-gray-800 text-center">
           Sign In
         </h2>
-        {error && (
-          <div className="text-red-500 text-sm text-center">{error}</div>
-        )}
         <div>
           <label className="block text-gray-600 mb-1" htmlFor="username">
             Username

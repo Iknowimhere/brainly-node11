@@ -2,12 +2,14 @@ import express from "express";
 import db from "./config/db.js";
 import userRoutes from './routes/user.routes.js'
 import profileRoutes from './routes/profile.route.js'
+import cors from 'cors'
 let app = express();
 db()
 
 
 
 //middleware
+app.use(cors({origin:"http://localhost:5173"}))
 app.use(express.json());
 
 //routes
