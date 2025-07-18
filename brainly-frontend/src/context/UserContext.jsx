@@ -10,8 +10,6 @@ export let AuthProvider = ({ children }) => {
     let res=user?JSON.parse(user): null;
     return res;
   });
-  console.log(user);
-  
   let [token, setToken] = useState(null);
 
 
