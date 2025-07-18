@@ -3,7 +3,7 @@ import useAuth from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 const Dashboard = () => {
   let navigate=useNavigate()
-    let {user,token}=useAuth()
+    let {user,token,logout}=useAuth()
     useEffect(()=>{
       if(!token){
         navigate("/")
@@ -18,6 +18,7 @@ const Dashboard = () => {
           Welcome to your dashboard <b>{user && user.username ? user.username : "User"}</b>. Here you can manage your account and access exclusive features.
         </p>
         {/* Add your dashboard content here */}
+        <button onClick={()=>logout()} className="bg-blue-50 p-2 w-full m-2 rounded-sm cursor-pointer">Logout</button>
         <div className="w-full flex flex-col md:flex-row gap-4">
           <div className="flex-1 bg-gray-100 rounded p-4 text-center">
             <span className="block text-lg font-medium text-gray-700">Profile</span>

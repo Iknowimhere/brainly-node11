@@ -8,12 +8,14 @@ import { SnackbarProvider } from "notistack";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <AuthProvider>
-      <SnackbarProvider anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-        <BrowserRouter>
+    <BrowserRouter>
+      <AuthProvider>
+        <SnackbarProvider
+          anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        >
           <App />
-        </BrowserRouter>
-      </SnackbarProvider>
-    </AuthProvider>
+        </SnackbarProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </StrictMode>
 );

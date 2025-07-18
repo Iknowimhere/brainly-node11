@@ -1,8 +1,10 @@
 import { useContext, createContext, useState, useEffect } from "react";
 
 let AuthContext = createContext();
+import { useNavigate } from "react-router-dom";
 
 export let AuthProvider = ({ children }) => {
+    let navigate=useNavigate()
   let [user, setUser] = useState(()=>{
     let user=localStorage.getItem("user")||null
     let res=user?JSON.parse(user): null;
@@ -30,7 +32,7 @@ export let AuthProvider = ({ children }) => {
     if(token){
         localStorage.removeItem("token")
     }
-    
+    navigate("/")
   }
 
   return (
