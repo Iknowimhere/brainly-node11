@@ -8,13 +8,13 @@ let shareSchema = new Schema(
     },
     userId:{
         type:Schema.Types.ObjectId,
-        reference:"User",
+        ref:"User",
         required:true
     }
   },
   { timestamps: true }
 );
 
-let Share = model("Tag", shareSchema);
+let Share = model("Share", shareSchema);
 
 export default Share;

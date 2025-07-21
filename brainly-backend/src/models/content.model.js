@@ -15,11 +15,11 @@ let contentSchema=new Schema({
         required:true
     },
     tag:{
-        type:[{type:Schema.Types.ObjectId,reference:"Tag"}],
+        type:[{type:Schema.Types.ObjectId,ref:"Tag"}],
     },
     userId:{
         type:Schema.Types.ObjectId,
-        reference:"User",
+        ref:"User",
         required:true
     }
 },{timestamps:true})
