@@ -35,6 +35,7 @@ let userSchema = new mongoose.Schema({
 //pre hook middleware-mongoose
 userSchema.pre("save",async function(next){
   this.password=await bcrypt.hash(this.password,10)
+  this.confirmPassword=undefined;
   next()
 })
 

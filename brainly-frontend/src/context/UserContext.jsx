@@ -10,7 +10,7 @@ export let AuthProvider = ({ children }) => {
     let res=user?JSON.parse(user): null;
     return res;
   });
-  let [token, setToken] = useState(null);
+  let [token, setToken] = useState(()=>localStorage.getItem("token")|| null);
 
 
 
@@ -32,9 +32,10 @@ export let AuthProvider = ({ children }) => {
     }
     navigate("/")
   }
+  let isAuthenticated=!!token
 
   return (
-    <AuthContext.Provider value={{ user, setUser, token, setToken,logout }}>
+    <AuthContext.Provider value={{ user, setUser, token, setToken,logout,isAuthenticated }}>
       {children}
     </AuthContext.Provider>
   );

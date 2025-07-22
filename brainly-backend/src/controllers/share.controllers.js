@@ -14,7 +14,8 @@ const shareContent = async (req, res, next) => {
     let existingShare = await Share.findOne({ userId: req.userId });
     if (req.body.share) {
       if (existingShare) {
-        res.status(200).json({ hash: existingShare.hash });
+        res.status(200).json({ hash: existingShare.hash,
+          link:`http://localhost:5000/api/v1/brain/share/${existingShare.hash}` });
         return;
       }
       let newShare = await Share.create({
@@ -23,6 +24,7 @@ const shareContent = async (req, res, next) => {
       });
       res.status(200).json({
         hash: newShare.hash,
+        link:`http://localhost:5000/api/v1/brain/share/${newShare.hash}`
       });
     } else {
       //   let existingShare = await Share.findOne({ userId: req.userId });
