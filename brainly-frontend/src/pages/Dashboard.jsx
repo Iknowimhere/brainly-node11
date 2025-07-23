@@ -1,31 +1,75 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { FaShareAlt } from "react-icons/fa";
 import { IoAddOutline } from "react-icons/io5";
+import Card from "../components/Card";
+import AddContentModal from "../components/AddContentModal";
+import axios from "../axios";
+import useAuth from "../context/UserContext";
+import ShareLinkModal from "../components/ShareLinkModal";
 
-const placeholderContent = {
-  document: [
-    { id: 1, title: "Sample Document 1", link: "#" },
-    { id: 2, title: "Sample Document 2", link: "#" },
-  ],
-  video: [
-    { id: 1, title: "Sample Video 1", link: "#" },
-    { id: 2, title: "Sample Video 2", link: "#" },
-  ],
-  audio: [
-    { id: 1, title: "Sample Audio 1", link: "#" },
-    { id: 2, title: "Sample Audio 2", link: "#" },
-  ],
-  twitter: [
-    { id: 1, title: "Sample Tweet 1", link: "#" },
-    { id: 2, title: "Sample Tweet 2", link: "#" },
-  ],
-};
 
 const Dashboard = () => {
+  let { token } = useAuth();
   const [selectedType, setSelectedType] = useState("document");
-  const contentList = placeholderContent[selectedType] || [];
+  const [contentList, setContentList] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [shareLink, setShareLink] = useState(null);
+  const [showShareModal, setShowShareModal] = useState(false);
 
+  const handleAddContent = async (content) => {
+    setShowModal(false);
+    let res = await axios.post(
+      "/content",
+      { ...content },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    setContentList((prev) => [...prev, res.data]);
+  };
+
+  const getContentList = async () => {
+    try {
+      setLoading(true);
+      let res = await axios.get("/content", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(res);
+      setContentList(res.data);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getContentList();
+  }, []);
+
+  const handleShare = async () => {
+    try {
+      let res = await axios.post(
+        "/brain/share",
+        { share: true },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      setShareLink(`http://localhost:5173/brain/share/${res.data.hash}`);
+      setShowShareModal(true);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar selectedType={selectedType} onSelectType={setSelectedType} />
@@ -38,12 +82,14 @@ const Dashboard = () => {
             <button
               type="submit"
               className="bg-blue-600 text-white px-2 py-1 rounded-sm cursor-pointer flex items-center gap-2"
+              onClick={handleShare}
             >
               <FaShareAlt /> Share
             </button>
             <button
               type="submit"
               className="px-2 py-1 rounded-sm cursor-pointer flex items-center gap-2 border-2 border-slate-200"
+              onClick={() => setShowModal(!showModal)}
             >
               {" "}
               <IoAddOutline /> Add content
@@ -51,34 +97,28 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {contentList.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white rounded shadow p-6 flex flex-col"
-            >
-              <span className="text-lg font-semibold mb-2">{item.title}</span>
-              <div className="h-64 w-64 bg-amber-100">
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/x78KpaMu-zQ?si=kx7oN74nK7aNXZBr"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerpolicy="strict-origin-when-cross-origin"
-                  allowfullscreen
-                  className="w-full h-auto"
-                >
-                  {" "}
-                </iframe>
-              </div>
-              <a href={item.link} className="text-blue-500 hover:underline">
-                Click on this
-              </a>
-            </div>
-          ))}
+          {loading ? (
+            <p>Loading...</p>
+          ) : (
+            <>
+              {contentList.map((item) => (
+                <Card {...item} />
+              ))}
+            </>
+          )}
         </div>
       </main>
+      <AddContentModal
+        open={showModal}
+        onClose={() => setShowModal(false)}
+        onSubmit={handleAddContent}
+        selectedType={selectedType}
+      />
+      <ShareLinkModal
+        open={showShareModal}
+        link={shareLink}
+        onClose={() => setShowShareModal(false)}
+      />
     </div>
   );
 };

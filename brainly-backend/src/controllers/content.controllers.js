@@ -3,13 +3,15 @@ import Tag from "../models/tag.model.js";
 
 let createContent = async (req, res, next) => {
   let { link, title, tag, type } = req.body;
+
+  
   try {
     let existingTag = await Tag.findOne({ title: tag });
     let newTag;
     if (!existingTag) {
       newTag = await Tag.create({ title: tag });
     }
-
+    
     let content = await Content.create({
       title,
       link,

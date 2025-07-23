@@ -1,5 +1,6 @@
 import ProtectedComponent from "./components/ProtectedComponent"
 import Dashboard from "./pages/Dashboard"
+import ShareableDashboard from "./pages/ShareableDashboard"
 import Signin from "./pages/Signin"
 import Singup from "./pages/Singup"
 import Welcome from "./pages/Welcome"
@@ -15,6 +16,7 @@ const App = () => {
             <Dashboard/>
             </ProtectedComponent>
           }/>
+          <Route path="/brain/share/:hash" element={<ShareableDashboard/>}></Route>
       </Routes>
   )
 }
