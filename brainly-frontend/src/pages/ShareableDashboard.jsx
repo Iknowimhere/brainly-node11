@@ -37,18 +37,18 @@ const ShareableDashboard = () => {
   const filteredContent = contentList.filter(item => item.type === selectedType);
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-50">
       <Sidebar selectedType={selectedType} onSelectType={setSelectedType} />
-      <main className="flex-1 p-10">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-2xl font-bold capitalize">
+      <main className="flex-1 p-4 sm:p-6 md:p-10">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold capitalize text-center md:text-left">
             {selectedType} Content
             {sharedUser && (
               <span className="ml-4 text-base font-normal text-gray-500">Shared by: {sharedUser}</span>
             )}
           </h1>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
           {loading ? (
             <p>Loading...</p>
           ) : (

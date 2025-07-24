@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "../axios";
 import { enqueueSnackbar } from "notistack";
 import useAuth from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const Signin = () => {
     let {setUser,setToken}=useAuth()
@@ -52,12 +52,12 @@ const Signin = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-2">
       <form
         onSubmit={handleSubmit}
-        className="w-full max-w-sm bg-white p-8 rounded-lg shadow-md space-y-6"
+        className="w-full max-w-sm bg-white p-4 sm:p-8 rounded-lg shadow-md space-y-4 sm:space-y-6"
       >
-        <h2 className="text-2xl font-semibold text-gray-800 text-center">
+        <h2 className="text-xl sm:text-2xl font-semibold text-gray-800 text-center">
           Sign In
         </h2>
         <div>
@@ -96,6 +96,11 @@ const Signin = () => {
         >
           {loading ? "Signing in..." : "Signin"}
         </button>
+        <div className="flex flex-col gap-2 mt-4">
+          <span className="text-xs text-gray-500 text-center">
+            Don't have an account? <Link to="/signup" className="text-blue-600 hover:underline">Sign up</Link>
+          </span>
+        </div>
       </form>
     </div>
   );
