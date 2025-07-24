@@ -9,7 +9,7 @@ export let auth=async (req,res,next)=>{
         return res.status(401).send("Please Login")
     }
     //verfying token using jwt
-    let decodedToken=jwt.verify(token,"topSecret")
+    let decodedToken=jwt.verify(token,process.env.JWT_SECRET)
     //check user exists in the db
     let user=await User.findById(decodedToken.id)
     if(!user){

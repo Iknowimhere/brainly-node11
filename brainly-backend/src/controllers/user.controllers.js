@@ -2,7 +2,7 @@ import User from "../models/user.model.js";
 import jwt from 'jsonwebtoken'
 
 let createToken=(id)=>{
-  return jwt.sign({id},"topSecret",{
+  return jwt.sign({id},process.env.JWT_SECRET,{
     expiresIn:'1d'
   })
 }
