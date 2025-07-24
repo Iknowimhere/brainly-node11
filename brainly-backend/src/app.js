@@ -12,7 +12,7 @@ db()
 
 
 //middleware
-app.use(cors({origin:"https://brainly-three-alpha.vercel.app/"}))
+app.use(cors())
 app.use(express.json());
 
 //routes
